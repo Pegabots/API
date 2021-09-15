@@ -1,0 +1,24 @@
+# ignore files
+.env
+*tmp*
+*.tmp.*
+# dirs for jupyter
+../venv/*
+/venv/*
+venv/
+__pycache__
+__pycache__/*
+.ipynb_checkpoints
+.ipynb_checkpoints/*
+../.ipynb_checkpoints/
+../.ipynb_checkpoints/*
+../test
+../test/
+../test/*
+/test/*
+
+# local store files MacOS
+.DS_Store
+../.DS_Store
+../.DS_Store/*
+.DS_Store/
