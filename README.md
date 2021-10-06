@@ -1,3 +1,5 @@
+# This script recovers data from Twitter users and its timeline and transform into panda's dataframe and exports it to csv files
+
 # before you go, take a moment to use the best practices for this repository
 
 This code was run with `python 3.9.4`. The packages are listed at the `requirements.txt` file.
