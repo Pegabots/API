@@ -16,6 +16,10 @@ __pycache__/*
 ../test/
 ../test/*
 /test/*
+.idea
+.idea/
+.idea/*
+*.sqlite
 
 # local store files MacOS
 .DS_Store

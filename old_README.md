@@ -1,4 +1,17 @@
-﻿# Repository for the Pegabot API
+# Repository for the Pegabot API  
+  
+
+## Pegabot ecosystem
+
+```mermaid
+sequenceDiagram
+Website ->> Pegabot API: sends twitter user handle (@twitter)
+API-->> Twitter API (v1): Recovers user data and tweets from  on Twitter API
+Twitter API (v1)-->>Pegabot API: User and tweets data
+Twitter API (v1)-->>Pegabot Engine: Receives user data and tweets
+Pegabot Engine-->>Pegabot API: Bot like probability
+Pegabot API-->>Website: Data from user and its botlike probability 
+```
 
 ## How to install
   
