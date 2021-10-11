@@ -1,6 +1,6 @@
-# from app import app
-# from flask import jsonify, request
-# from app.models import Analises, AnaliseSchema
-# from app.twitter_handler import TwitterHandler
+"""
+Above this you should import each file for each route created.
 
-from routes import botometer
+"""
+
+from app.routes import botometer

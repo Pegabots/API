@@ -2,7 +2,6 @@ from app import s
 import tweepy
 from easydict import EasyDict as edict
 
-
 class TwitterHandler():
     def __init__(self):
         self.twitter = {
@@ -12,21 +11,25 @@ class TwitterHandler():
             'TWITTER_API_TOKEN_SECRET': s.os.environ.get("twitter_access_token_secret")
         }
 
-        auth = tweepy.OAuthHandler(self.twitter.get('TWITTER_API_KEY'), twitter.get('TWITTER_API_SECRET'))
+        self.auth = tweepy.OAuthHandler(self.twitter.get('TWITTER_API_KEY'), self.twitter.get('TWITTER_API_SECRET'))
 
     # se não autenticar com o access token algumas funcionalidades da api
     # não ficam disponíveis. tipo verificar rate limits.
-        auth.set_access_token(self.twitter.get('TWITTER_API_TOKEN'), twitter.get('TWITTER_API_TOKEN_SECRET'))
+        self.auth.set_access_token(self.twitter.get('TWITTER_API_TOKEN'), self.twitter.get('TWITTER_API_TOKEN_SECRET'))
 
     # o objeto api é utilizado para realizar toda comunicação com a API do twitter.
-        self.api = tweepy.API(auth)
+        self.api = tweepy.API(self.auth)
 
     def api(self):
         return self.api()
 
+    def show(self):
+        for key in self.twitter:
+            print(f' {key} - {self.twitter.get(key)}')
 
     # recuperando dados de um twitter user
     def findByHandle(self, handle):
+        # print(f'findByHandlehandle {handle}')
         try:
             user = self.api.get_user(screen_name=handle)
             return edict({
@@ -46,17 +49,14 @@ class TwitterHandler():
                 'profile_image': user.profile_image_url,
                 'withheld_in_countries': user.withheld_in_countries
             })
-        except tweepy.TweepyException as e:
+        except tweepy.HTTPException as e:
             print("Tweepy Error retrieving user: {}".format(e))
-            return e
+            return {'api_errors': e.api_errors, 'codes': e.api_codes, 'reason': e.response.reason, 'args': e.args}
 
 
-    #         return {'reason' : e.reason, 'codes' : e.api_code, 'response' : e.response, 'args' : e.args}
-
-    # recuperando dados de um twitter user
     def getUserTimeline(self, uid, num_tweets=100):
         try:
-            timeline = tweepy.Cursor(api.user_timeline, user_id=uid, count=num_tweets).items(num_tweets)
+            timeline = tweepy.Cursor(self.api.user_timeline, user_id=uid, count=num_tweets).items(num_tweets)
             t = []
             for tweet in timeline:
                 x = {
@@ -79,9 +79,13 @@ class TwitterHandler():
                 }
                 t.append(x)
             return (t)
-        except tweepy.TweepyException as e:
-    #         print("Tweepy Error timeline: {}".format(e))
-            return {'reason' : e.reason, 'codes' : e.api_code, 'response' : e.response, 'args' : e.args}
+        except tweepy.HTTPException as e:
+            print("Tweepy Error retrieving timeline: {}".format(e))
+            return {'api_errors': e.api_errors, 'codes': e.api_codes, 'reason': e.response.reason, 'args': e.args}
+
+    def getUserAndTimeline(self, twitter_id):
+        user = self.getUserTimeline(twitter_id)
+        # if type(user)
 
 
 # Loading variables for tweepy

@@ -1,11 +1,8 @@
-from app import app
-from flask_sqlalchemy import SQLAlchemy
-from flask_marshmallow import Marshmallow
-
-db = SQLAlchemy(app)
-ma = Marshmallow(app)
+from app.models import db, ma
+import random
 
 class Analises(db.Model):
+    __tablename__ = 'analises'
     id = db.Column(db.Integer, primary_key=True)
     handle = db.Column(db.String(80), nullable=False)
     total = db.Column(db.String(120), nullable=True)
@@ -17,4 +14,6 @@ class AnaliseSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = Analises
         load_instance = True
-        fields = ("id", "handle", "total")
+        fields = ("id", "handle", "total") # list filds which will be available for final user
+
+
