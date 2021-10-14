@@ -25,7 +25,7 @@ class TwitterHandler():
     def api(self):
         return self.api
 
-    def show_twitter_credentials(self):
+    def __show_twitter_credentials(self):
         for key in self.twitter:
             print(f' {key} - {self.twitter.get(key)}')
 
@@ -35,7 +35,7 @@ class TwitterHandler():
             user = self.api.get_user(screen_name=handle)
             return edict({
                 "twitter_id": user.id_str,
-                "twitter_handle": user.screen_name,
+                "twitter_handle": str.lower(user.screen_name),
                 "twitter_user_name": user.name,
                 "twitter_is_protected": user.protected,
                 "twitter_user_description": user.description,
