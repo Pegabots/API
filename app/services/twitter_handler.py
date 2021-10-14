@@ -34,21 +34,21 @@ class TwitterHandler():
         try:
             user = self.api.get_user(screen_name=handle)
             return edict({
-                "twitterId": user.id_str,
-                "twitterHandle": user.screen_name,
-                "name": user.name,
-                "twitterIsProtected": user.protected,
-                "description": user.description,
-                "followersCount": user.followers_count,
-                "friendsCount": user.friends_count,
-                "location": user.location,
-                "createdAtOriginal": user.created_at,
-                "createdAt": datetime.strftime(user.created_at, '%Y-%m-%d %H:%M:%S'),
-                "isVerified": user.verified,
-                "lang": user.lang,
-                "defaultProfile": user.default_profile,
-                "profileImage": user.profile_image_url,
-                "withheldInCountries": user.withheld_in_countries
+                "twitter_id": user.id_str,
+                "twitter_handle": user.screen_name,
+                "twitter_user_name": user.name,
+                "twitter_is_protected": user.protected,
+                "twitter_user_description": user.description,
+                "twitter_followers_count": user.followers_count,
+                "twitter_friends_count": user.friends_count,
+                "twitter_location": user.location,
+                # "createdAtOriginal": user.created_at,
+                "twitter_created_at": datetime.strftime(user.created_at, '%Y-%m-%dT %H:%M:%S'),
+                "twitter_is_verified": user.verified,
+                "twitter_lang": user.lang,
+                "twitter_default_profile": user.default_profile,
+                "twitter_profile_image": user.profile_image_url,
+                "twitter_withheld_in_countries": user.withheld_in_countries
             })
         except tweepy.HTTPException as e:
             print("Tweepy Error retrieving user: {}".format(e))
