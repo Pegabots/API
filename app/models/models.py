@@ -1,5 +1,5 @@
 from app.models import db, ma, migrate
-import random
+from datetime import datetime
 
 class Analises(db.Model):
     __tablename__ = 'analises'
@@ -27,9 +27,17 @@ class Analises(db.Model):
     cache_times_served = db.Column(db.Integer(), nullable=True)
     cache_validity = db.Column(db.TIMESTAMP(), nullable=True)
     pegabot_version = db.Column(db.String(255), nullable=True)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+
+    def process_bind_param(value):
+        if type(value) is str:
+            return datetime.strptime(value, '%Y-%m-%dT %H:%M:%S')
+        return value
 
     def __repr__(self):
-        return '<Twitter User %r>' % self.handle
+        return '<Twitter User %r>' % self.twitter_handle
 
 class AnaliseSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
