@@ -1,6 +1,32 @@
-"""
-Above this you should import each file for each route created.
+from app import app
+from flask import jsonify, request, abort
+from app.models.models import Analises, AnaliseSchema
+from app.services.botometer_service import BotometerService
 
-"""
 
-from app.routes import botometer
+@app.get("/catch")
+def catch():
+    handle = str(request.args.get('profile'))
+    botometer_service = BotometerService()
+    response = botometer_service.catch(handle)
+    return jsonify(response), 200
+
+@app.get('/botprobability') # test only
+def botprobability():
+    handle = str(request.args.get('profile'))
+    botometer_service = BotometerService()
+    response = botometer_service.botProbability(handle)
+    return jsonify(response), 200
+
+@app.get('/complete')
+def complete():
+    handle = str(request.args.get('profile'))
+    result = Analises.query.filter_by(handle=handle).first()
+    # result = Analises.query.get(1);
+    analise_schema = AnaliseSchema()
+    return jsonify(analise_schema.dump(result))
+
+@app.post('/feedback')
+def feedback():
+    return jsonify("feedback")
+
