@@ -21,13 +21,11 @@ class BotProbability():
     def botProbability(self, handle, twitterTimeline=None, twitterUserData=None):
         self.mockProbability()
         return {
-            'algorithmVersion': 'version-1.0',
+            'pegabot_version': 'version-1.0',
             'handle': handle,
-            'created_at': '',
-            'updated_at': '',
+            'total': self.total,
             'friends': round(self.friends, 2),
             'sentiment': round(self.sentiment, 2),
             'network': round(self.network, 2),
-            'temporal': round(self.temporal, 2),
-            'botProbability': self.total
+            'temporal': round(self.temporal, 2)
         }
