@@ -1,4 +1,5 @@
 # from app.models import db, ma, migrate
+from easydict import EasyDict as edict
 import random
 
 
@@ -20,7 +21,7 @@ class BotProbability():
 
     def botProbability(self, handle, twitterTimeline=None, twitterUserData=None):
         self.mockProbability()
-        return {
+        return edict({
             'pegabot_version': 'version-1.0',
             'handle': handle,
             'total': self.total,
@@ -28,4 +29,4 @@ class BotProbability():
             'sentiment': round(self.sentiment, 2),
             'network': round(self.network, 2),
             'temporal': round(self.temporal, 2)
-        }
+        })
