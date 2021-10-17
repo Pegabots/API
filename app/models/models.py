@@ -43,7 +43,7 @@ class AnaliseSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = Analises
         load_instance = True
-        # fields = ("id", "handle", "total") # list filds which will be available for final user
+        # fields = ("id", "handle", "total", "network") # list filds which will be available for final user
 
 
 class Feedback(db.Model):

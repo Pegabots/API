@@ -11,6 +11,14 @@ def catch():
     response = botometer_service.catch(handle)
     return jsonify(response), 200
 
+@app.post("post-relatorio")
+def process_report():
+    file = request.args.get('file')
+    # process file
+    # queue
+    # retrieve id
+
+
 @app.get('/botprobability') # test only
 def botprobability():
     handle = str(request.args.get('profile'))

@@ -21,6 +21,7 @@ class BotProbability():
 
     def botProbability(self, handle, twitterTimeline=None, twitterUserData=None):
         self.mockProbability()
+        # sleep.time(15)
         return edict({
             'pegabot_version': 'version-1.0',
             'handle': handle,
