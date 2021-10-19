@@ -55,8 +55,8 @@ The result should be something as bellow:
 cache-dir = "/Users/dc/Library/Caches/pypoetry"
 experimental.new-installer = true
 installer.parallel = true
-virtualenvs.create = true
-virtualenvs.in-project = false
+virtualenvs.create = false
+virtualenvs.in-project = true
 virtualenvs.path = "{cache-dir}/virtualenvs"  # /Users/dc/Library/Caches/pypoetry/virtualenvs
 ```
 
