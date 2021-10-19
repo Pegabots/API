@@ -1,6 +1,6 @@
 #!/bin/sh
-source .venv/bin/activate
-export FLASK_APP=./app/api.py
+poetry shell
+export FLASK_APP=app/api.py
 export FLASK_ENV=development
 poetry install
-flask run
+poetry run flask run
