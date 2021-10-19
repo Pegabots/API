@@ -15,9 +15,9 @@ at the terminal just run:
   
 At the terminal type, inside the project folder type:  
   
-`virtualenv venv`   
+`virtualenv .venv`   
 
-and you should see a `env/` dir inside your project folder or with the given name you choose at the step before.  
+and you should see a `.env/` dir inside your project folder or with the given name you choose at the step before.  
   
   
 ## step 1: give permission to `init.sh` file to run  
@@ -31,42 +31,45 @@ chmod +x .init.sh
 on terminal, inside the project folder just copy and rename the `.env-example` to `.env`  
   
 `$ cp .env.example .env`  
-  
-#### generate an updated version of your `virtualenv` to a requirements.txt file  everytime you update a package in this project
-  
-Go to your terminal and type  
-  
-`pip freeze > requirements.txt`  
-  
-After that, you should commit only your `requirements.txt` file instead your virtualenv `/venv` directory (which is ignored by default on this project on .gitignore file) 
 
- ## step 3: set up your `.env` variables:
+## step 3: Keeping the project dependencies up-to-date using `poetry`
 
+### first install poetry on your local python (not your virtual env)  
+
+`pip install poetry`
+
+### Installing project dependencies from `pyproject.toml`
+
+`poetry install`
+
+### Set poetry to work with your local `.venv/` 
+
+`poetry config virtualenvs.create false --local`
+
+### Verify your poetry settings:
+
+`poetry config --list`
+
+The result should be something as bellow:
 ```console
-twitter_api_key=""
-
-twitter_api_secret=""
-
-twitter_access_token=""
-
-twitter_access_token_secret=""
-
-DB_USER=
-
-DB_HOST=
-
-DB_PASSWORD=
-
-DB_PORT=
-
-DATABASE_URL=
+cache-dir = "/Users/dc/Library/Caches/pypoetry"
+experimental.new-installer = true
+installer.parallel = true
+virtualenvs.create = true
+virtualenvs.in-project = false
+virtualenvs.path = "{cache-dir}/virtualenvs"  # /Users/dc/Library/Caches/pypoetry/virtualenvs
 ```
 
-## running the project 
+
+### Example: adding `flask` to the project
+
+`poetry add flask`
+
+## step 4: running the project for delopment
 
 The script `init.sh` contains the commands necessary for your to install your `requirements.txt`file and run the project.
 
-At your terminal 
+On your terminal 
 ```console
 ./init.sh
 ```
