@@ -1,8 +1,8 @@
 # from flask import jsonify
 from app.models import db
-from app.models.models import Analises, AnaliseSchema
+from app.models.models import Analises, AnaliseSchema, BotProbability
 from app.services.twitter_handler import TwitterHandler
-from app.models.botprobability import BotProbability
+# from app.models.botprobability import BotProbability
 from datetime import datetime
 
 
