@@ -20,11 +20,8 @@ class BotometerService():
             3. return the new analisis to client
             '''
             user = self.findUserAnalisisByHandle(handle=handle)
-            if 'twitter_handle' in user:
-                # verify cache value
-                # update do time served
-                # if caches is 7_day
-                # self.updateCacheTimesServed(user)
+            if 'id' in user:
+                # return self.update_cache_times_served(user)
                 return user
             else: # should perform the analisis
                 response = self.twitter_handler.findByHandle(handle=handle) # check on twitter
@@ -55,7 +52,7 @@ class BotometerService():
                         temporal = probability.temporal,
                         network = probability.network,
                         sentiment = probability.sentiment,
-                        cache_times_served = 1, #
+                        cache_times_served = 0, #
                         # cache_validity =
                         pegabot_version = probability.pegabot_version,
                     )
@@ -68,30 +65,18 @@ class BotometerService():
         else:
             return response
 
+
     def findUserAnalisisByHandle(self, handle):
-        user = Analises.query.filter_by(handle=handle).order_by(Analises.id.desc()).first()
         analise_schema = AnaliseSchema()
-        return analise_schema.dump(user)
+        analise = Analises.query.filter_by(handle=handle).order_by(Analises.id.desc()).first()
+        self.update_times_served_count(analise)
+        return analise_schema.dump(analise)
 
-    '''
-        TO-DO: this code should be refactored. It's only working with records that are already on the database
-    '''
-    def update_times_served(self, user):
-        pass
-        # if user != '': #     needs to update times-served in order to know how many times each analisis has been used in a timeframe.
-            # user.cache_times_served +=1
-            # db.session.add(user)
-            # db.session.commit()
-
-    def updateCacheTimesServed(self, user):
-        cache = user.get('cache_times_served')
-        cache +=1
-        # print(cache)
-        user['cache_times_served'] = cache
-        # print(user)
-        # needs to update times-served in order to know how many times each analisis has been used in a timeframe.
-        db.session.add(user)
-        db.session.commit()
+    def update_times_served_count(self, analise):
+        if analise is not None:
+            analise.cache_times_served += 1  # Analises.query.filter_by(id=analise.get('id')).update(dict(cache_times_served=analise.cache_times_served))
+            db.session.add(analise)
+            db.session.commit()
 
     def botProbability(self, handle):
         p = BotProbability()
