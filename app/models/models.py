@@ -1,5 +1,8 @@
-from app.models import db, ma, migrate
+from app.models import db, ma
 from datetime import datetime
+from easydict import EasyDict as edict
+
+
 
 class Analises(db.Model):
     __tablename__ = 'analises'
@@ -76,4 +79,33 @@ class FeedbackSchema(ma.SQLAlchemyAutoSchema):
         load_instance = True
         fields = ("id", "analise_id", "report_name") # list filds which will be available for final user
 
+class BotProbability():
+    def __init__(self):
+        self.id = id
+        self.total = 0
+        self.friends = 0
+        self.network = 0
+        self.temporal = 0
+        self.sentiment = 0
+
+    def mockProbability(self):
+        import random
+        self.friends = float(random.uniform(0, 1)) *100
+        self.network = float(random.uniform(0, 1)) *100
+        self.temporal = float(random.uniform(0, 1)) *100
+        self.sentiment = float(random.uniform(0, 1)) *100
+        self.total = round((self.friends + self.sentiment + self.network + self.temporal) / 4, 2)
+
+    def botProbability(self, handle, twitterTimeline=None, twitterUserData=None):
+        self.mockProbability()
+        # sleep.time(15)
+        return edict({
+            'pegabot_version': 'version-1.0',
+            'handle': handle,
+            'total': self.total,
+            'friends': round(self.friends, 2),
+            'sentiment': round(self.sentiment, 2),
+            'network': round(self.network, 2),
+            'temporal': round(self.temporal, 2)
+        })
 
