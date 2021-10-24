@@ -21,6 +21,7 @@ __pycache__/*
 .idea/
 .idea/*
 *.sqlite
+*.db
 
 # local store files MacOS
 .DS_Store
