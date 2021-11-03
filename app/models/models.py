@@ -1,6 +1,7 @@
 from app.models import db, ma
 from datetime import datetime
 from easydict import EasyDict as edict
+from app import celery, Celery
 
 
 
@@ -73,6 +74,7 @@ class Reports(db.Model):
     def __repr__(self):
         return '<Feedback User %r>' % self.id
 
+
 class FeedbackSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = Feedback
@@ -96,12 +98,11 @@ class BotProbability():
         self.sentiment = float(random.uniform(0, 1)) *100
         self.total = round((self.friends + self.sentiment + self.network + self.temporal) / 4, 2)
 
-    def botProbability(self, handle, twitterTimeline=None, twitterUserData=None):
+    @celery.task(bind=True)
+    def botProbability(self):
         self.mockProbability()
-        # sleep.time(15)
         return edict({
             'pegabot_version': 'version-1.0',
-            'handle': handle,
             'total': self.total,
             'friends': round(self.friends, 2),
             'sentiment': round(self.sentiment, 2),
