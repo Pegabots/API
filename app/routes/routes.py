@@ -1,6 +1,6 @@
 from app import app
 from flask import jsonify, request, abort
-from app.models.models import Analises, AnaliseSchema
+from app.models.models import Analysis, AnalysisSchema
 from app.services.botometer_service import BotometerService
 
 
@@ -22,10 +22,10 @@ def botprobability():
 @app.get('/complete')
 def complete():
     handle = str(request.args.get('profile'))
-    result = Analises.query.filter_by(handle=handle).first()
-    # result = Analises.query.get(1);
-    analise_schema = AnaliseSchema()
-    return jsonify(analise_schema.dump(result))
+    result = Analysis.query.filter_by(handle=handle).first()
+    # result = Analysis.query.get(1);
+    analysis_schema = AnalysisSchema()
+    return jsonify(analysis_schema.dump(result))
 
 @app.post('/feedback')
 def feedback():

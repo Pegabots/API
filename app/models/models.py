@@ -4,8 +4,8 @@ from easydict import EasyDict as edict
 
 
 
-class Analises(db.Model):
-    __tablename__ = 'analises'
+class Analysis(db.Model):
+    __tablename__ = 'analysis'
     id = db.Column(db.Integer, primary_key=True)
     handle = db.Column(db.String(80), nullable=False)
     total = db.Column(db.String(120), nullable=True)
@@ -42,9 +42,9 @@ class Analises(db.Model):
     def __repr__(self):
         return '<Twitter User %r>' % self.twitter_handle
 
-class AnaliseSchema(ma.SQLAlchemyAutoSchema):
+class AnalysisSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
-        model = Analises
+        model = Analysis
         load_instance = True
         # fields = ("id", "handle", "total", "network") # list filds which will be available for final user
 
@@ -62,13 +62,13 @@ class FeedbackSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = Feedback
         load_instance = True
-        fields = ("id", "analisis_id", "feedback") # list filds which will be available for final user
+        fields = ("id", "analysis_id", "feedback") # list filds which will be available for final user
 
 class Reports(db.Model):
-    __tablename__ = 'relatorios'
+    __tablename__ = 'reports'
     id = db.Column(db.Integer, primary_key=True)
     report_name = db.Column(db.String(), nullable=False)
-    analise_id = db.Column(db.String(80), nullable=False)
+    analysis_id = db.Column(db.String(80), nullable=False)
 
     def __repr__(self):
         return '<Feedback User %r>' % self.id
@@ -77,7 +77,7 @@ class FeedbackSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = Feedback
         load_instance = True
-        fields = ("id", "analise_id", "report_name") # list filds which will be available for final user
+        fields = ("id", "analysis_id", "report_name") # list filds which will be available for final user
 
 class BotProbability():
     def __init__(self):

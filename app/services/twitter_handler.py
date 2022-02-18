@@ -15,11 +15,11 @@ class TwitterHandler():
 
         self.auth = tweepy.OAuthHandler(self.twitter.get('TWITTER_API_KEY'), self.twitter.get('TWITTER_API_SECRET'))
 
-    # se não autenticar com o access token algumas funcionalidades da api
-    # não ficam disponíveis. tipo verificar rate limits.
+        # if you don't authenticate with the access token some api features
+        # are not available. For Example: check rate limits.
         self.auth.set_access_token(self.twitter.get('TWITTER_API_TOKEN'), self.twitter.get('TWITTER_API_TOKEN_SECRET'))
 
-    # o objeto api é utilizado para realizar toda comunicação com a API do twitter.
+        # the api object is used to carry out all communication with the twitter API.
         self.api = tweepy.API(self.auth)
 
     def api(self):
@@ -29,7 +29,7 @@ class TwitterHandler():
         for key in self.twitter:
             print(f' {key} - {self.twitter.get(key)}')
 
-    # recuperando dados de um twitter user
+    # retrieving data from a twitter user
     def findByHandle(self, handle):
         try:
             user = self.api.get_user(screen_name=handle)
