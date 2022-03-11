@@ -86,8 +86,3 @@ class TwitterHandler():
     def getUserAndTimeline(self, twitter_id):
         user = self.getUserTimeline(twitter_id)
         # if type(user)
-
-
-# Loading variables for tweepy
-
-

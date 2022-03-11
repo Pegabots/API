@@ -32,7 +32,7 @@ class Analysis(db.Model):
     pegabot_version = db.Column(db.String(255), nullable=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow)
-
+    source_of_request = db.Column(db.String(255), nullable=True)
 
     def process_bind_param(value):
         if type(value) is str:

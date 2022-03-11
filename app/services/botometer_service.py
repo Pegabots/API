@@ -11,7 +11,7 @@ class BotometerService():
         self.pegabot = BotProbability()  # module which proccess user data and tweets and gives a result
         self.twitter_handler = TwitterHandler()
 
-    def catch(self, handle):
+    def catch(self, handle, source):
         try:
             '''
             1. verify if the analysis is valid (by same version of the model or cachetime still valid)
@@ -30,7 +30,7 @@ class BotometerService():
                     timeline = self.twitter_handler.getUserTimeline(response.twitter_id, num_tweets=1)
                     probability = self.pegabot.botProbability(handle)  # mock bot probability
 
-                    # save analisis to database
+                    # save analysis to database
                     analysis = Analysis(
                         handle = response.twitter_handle,
                         twitter_id = response.twitter_id,
@@ -55,6 +55,7 @@ class BotometerService():
                         cache_times_served = 0, #
                         # cache_validity =
                         pegabot_version = probability.pegabot_version,
+                        source_of_request = source,
                     )
                     db.session.add(analysis)
                     db.session.commit()
@@ -65,16 +66,15 @@ class BotometerService():
         else:
             return response
 
-
     def findUserAnalysisByHandle(self, handle):
         analysis_schema = AnalysisSchema()
         analysis = Analysis.query.filter_by(handle=handle).order_by(Analysis.id.desc()).first()
-        self.update_times_served_count(analysis)
+        self.updateTimesServedCount(analysis)
         return analysis_schema.dump(analysis)
 
-    def update_times_served_count(self, analysis):
+    def updateTimesServedCount(self, analysis):
         if analysis is not None:
-            analysis.cache_times_served += 1  # analysiss.query.filter_by(id=analysis.get('id')).update(dict(cache_times_served=analysis.cache_times_served))
+            analysis.cache_times_served += 1  # analysis.query.filter_by(id=analysis.get('id')).update(dict(cache_times_served=analysis.cache_times_served))
             db.session.add(analysis)
             db.session.commit()
 
