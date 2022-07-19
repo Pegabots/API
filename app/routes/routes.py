@@ -1,5 +1,5 @@
 from app import app
-from flask import jsonify, request, abort
+from flask import jsonify, request
 from app.models.models import Analises, AnaliseSchema
 from app.services.botometer_service import BotometerService
 

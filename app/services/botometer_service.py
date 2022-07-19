@@ -1,10 +1,6 @@
-# from flask import jsonify
 from app.models import db
 from app.models.models import Analises, AnaliseSchema, BotProbability
 from app.services.twitter_handler import TwitterHandler
-# from app.models.botprobability import BotProbability
-from datetime import datetime
-
 
 class BotometerService():
     def __init__(self):
@@ -27,11 +23,13 @@ class BotometerService():
                 response = self.twitter_handler.findByHandle(handle=handle) # check on twitter
                 # return response
                 if 'api_errors' not in response: # if finds the user on twitter performs the analisis and saves to the database
-                    timeline = self.twitter_handler.getUserTimeline(response.twitter_id, num_tweets=1)
-                    probability = self.pegabot.botProbability(handle)  # mock bot probability
+                    timeline = self.twitter_handler.getUserTimeline(response.twitter_id)
+                    user = self.twitter_handler.getUser(response.twitter_id)
+                    probability = self.pegabot.botProbability(handle, timeline, user)  # mock bot probability
 
                     # save analisis to database
                     analise = Analises(
+                        # User
                         handle = response.twitter_handle,
                         twitter_id = response.twitter_id,
                         twitter_handle = response.twitter_handle,
@@ -48,10 +46,10 @@ class BotometerService():
                         twitter_profile_image = response.twitter_profile_image,
                         # twitter_withheld_in_countries = response.twitter_withheld_in_countries, # giving error, needs a refactor
                         total = probability.total,
-                        friends = probability.friends,
-                        temporal = probability.temporal,
-                        network = probability.network,
-                        sentiment = probability.sentiment,
+                        friends = 0,#probability.friends,
+                        temporal = 0,#probability.temporal,
+                        network = 0,#probability.network,
+                        sentiment = 0,#probability.sentiment,
                         cache_times_served = 0, #
                         # cache_validity =
                         pegabot_version = probability.pegabot_version,
@@ -59,6 +57,7 @@ class BotometerService():
                     db.session.add(analise)
                     db.session.commit()
                     analise_schema = AnaliseSchema()
+                    #print(response)
                     return analise_schema.dump(analise)
         except Exception as e:
             raise
@@ -78,7 +77,7 @@ class BotometerService():
             db.session.add(analise)
             db.session.commit()
 
-    def botProbability(self, handle):
+    def botProbability(self, handle, user, timeline):
         p = BotProbability()
-        response = p.botProbability(handle=handle)
+        response = p.botProbability(handle=handle, twitterTimeline=timeline, twitterUserData=user)
         return response
