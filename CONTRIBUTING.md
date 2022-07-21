@@ -72,7 +72,7 @@ preencha a string `.env` com suas credenciais de desenvolvedor do Twitter (veja 
 
 #### 5.1 Instalando dependências do projeto de `pyproject.toml`
 
-`instalação de poesia`
+`poetry install`
 
 #### 5.2 Defina o poetry para trabalhar com seu `.venv/` local
 
@@ -80,7 +80,7 @@ preencha a string `.env` com suas credenciais de desenvolvedor do Twitter (veja 
 
 #### 5.3 Verifique suas configurações do poetry:
 
-`configuração de poesia --list`
+`poetry config --list`
 
 O resultado deve ser algo como abaixo:
 ```console
