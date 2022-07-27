@@ -1,3 +1,5 @@
+from datetime import datetime, date, timedelta
+
 from app.models import db
 from app.models.models import Analises, AnaliseSchema, BotProbability
 from app.services.twitter_handler import TwitterHandler
@@ -16,16 +18,23 @@ class BotometerService():
             3. return the new analisis to client
             '''
             user = self.findUserAnalisisByHandle(handle=handle)
+            response = self.twitter_handler.findByHandle(handle=handle) # check on twitter
+            print(response)
             if 'id' in user:
-                # return self.update_cache_times_served(user)
-                return user
+                if 'api_errors' not in response: return user
+                return response
             else: # should perform the analisis
-                response = self.twitter_handler.findByHandle(handle=handle) # check on twitter
-                # return response
+                
                 if 'api_errors' not in response: # if finds the user on twitter performs the analisis and saves to the database
                     timeline = self.twitter_handler.getUserTimeline(response.twitter_id)
                     user = self.twitter_handler.getUser(response.twitter_id)
-                    probability = self.pegabot.botProbability(handle, timeline, user)  # mock bot probability
+                    
+                    if 'api_errors' in timeline: 
+                        if(date.today() == user[0]['created_at'].date()):
+                            print("Account created today")
+                            return {'api_errors': [{'code': '11', 'message:': 'Account created today.'}], 'codes': '11', 'reason': 'Too litle information available', 'args': 'Account created today.'}
+                        return timeline
+                    probability = self.pegabot.botProbability(handle, timeline, user)  # bot probability
 
                     # save analisis to database
                     analise = Analises(
@@ -51,13 +60,13 @@ class BotometerService():
                         network = 0,#probability.network,
                         sentiment = 0,#probability.sentiment,
                         cache_times_served = 0, #
-                        # cache_validity =
+                        cache_validity = datetime.today() + timedelta(30),
                         pegabot_version = probability.pegabot_version,
                     )
                     db.session.add(analise)
                     db.session.commit()
                     analise_schema = AnaliseSchema()
-                    #print(response)
+
                     return analise_schema.dump(analise)
         except Exception as e:
             raise
@@ -67,7 +76,9 @@ class BotometerService():
 
     def findUserAnalisisByHandle(self, handle):
         analise_schema = AnaliseSchema()
-        analise = Analises.query.filter_by(handle=handle).order_by(Analises.id.desc()).first()
+        analise = Analises.query.filter_by(handle=handle.lower()).order_by(Analises.id.desc()).first()
+
+        self.check_cache_validity(analise, handle)
         self.update_times_served_count(analise)
         return analise_schema.dump(analise)
 
@@ -76,6 +87,23 @@ class BotometerService():
             analise.cache_times_served += 1  # Analises.query.filter_by(id=analise.get('id')).update(dict(cache_times_served=analise.cache_times_served))
             db.session.add(analise)
             db.session.commit()
+    
+    def check_cache_validity(self, analise, handle):
+        if analise is not None:
+            if((datetime.today() - analise.cache_validity).days > 0):                
+                response = self.twitter_handler.findByHandle(handle=handle) # check on twitter
+                # return response
+                if 'api_errors' not in response: # if finds the user on twitter performs the analisis and saves to the database
+                    timeline = self.twitter_handler.getUserTimeline(response.twitter_id)
+                    if 'api_errors' not in timeline:
+                        user = self.twitter_handler.getUser(response.twitter_id)
+                        probability = self.pegabot.botProbability(handle, timeline, user)  # bot probability
+                        analise.total = probability.total
+                        analise.cache_validity = datetime.today() + timedelta(30)
+                        analise.updated_at = datetime.today()
+
+                db.session.add(analise)
+                db.session.commit()
 
     def botProbability(self, handle, user, timeline):
         p = BotProbability()

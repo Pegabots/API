@@ -80,6 +80,9 @@ class TwitterHandler():
                     "tweet_text": tweet.text
                 }
                 tweets.append(x)
+            if(len(tweets) < 20):
+                print("Tweepy Error getting user info. Too little information!")
+                return {'api_errors': [{'code': '10', 'message:': 'Too little information available'}], 'codes': '10', 'reason': 'Too litle information available', 'args': 'Less than 20 tweets available.'}
             return (tweets)
         except tweepy.HTTPException as e:
             print("Tweepy Error retrieving timeline: {}".format(e))
@@ -88,7 +91,7 @@ class TwitterHandler():
     def getUser(self, uid):
         try:
             user_data = self.api.get_user(user_id=uid)
-
+            
             user = [{
                 "created_at": user_data.created_at,
                 "default_profile": user_data.default_profile,
