@@ -15,7 +15,11 @@ Reunimos aqui as diretrizes para ajudá-lo a descobrir onde você pode ser mais 
 
 ## Tipos de contribuições que procuramos
 
-"Listagem dos tipos de contribuições esperados"
+A API do Pegabot aceita contribuições que:
+* Tornem a API mais eficiente
+* Documente o funcionamento da API
+* Corrijam possíveis bugs
+* Proponha novos endpoints
 
 Interessado em contribuir neste projeto? Leia!
 
