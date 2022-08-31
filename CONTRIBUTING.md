@@ -38,53 +38,74 @@ Se você não vir sua ideia listada e achar que ela se encaixa nos objetivos des
 
 ## Configurando seu ambiente
 
-### Como instalar
+### Instalação
   
-Este código é executado com `python 3.9.4` e `pip 20.2.3`.
+Este código foi executado com `python 3.9.4` e `pip 20.2.3`.
+
+```sh
+git clone https://github.com/Pegabots/API.git
+```
   
 ### 1. Instale o pacote virtualenv em seu python via pip
   
 No terminal, basta executar:
-  
-`python -m pip install --user virtualenv`
 
-### 2. Instalando o sqlite3
-`$ pip instalar pysqlite3`
-`$ pip instalar poesia`
+```sh
+pip install --user virtualenv
+```
+
+### 2. Instalando requisitos
+
+```sh
+pip install pysqlite3 poetry pandas flask
+```
   
 ### 3. Crie um ambiente virtual
   
-No tipo de terminal, dentro da pasta do projeto digite:
-  
-`virtualenv .venv`
+No terminal, dentro da pasta do projeto digite:
+
+```sh
+cd API
+virtualenv .venv
+```
 
 e você deverá ver um diretório `.env/` dentro da pasta do seu projeto ou com o nome que você escolheu no passo anterior.
 
 Agora, ative o ambiente virtual:
 
-`source .venv/bin/activate`
+```sh
+source .venv/bin/activate
+```  
   
 ### 4. Crie seu arquivo `.env` localmente
   
-no terminal, dentro da pasta do projeto apenas copie e renomeie o `example.env` para `.env`
+No terminal, dentro da pasta do projeto apenas copie e renomeie o `example.env` para `.env`
 
-`$ cp example.env .env`
+```sh
+cp example.env .env
+```
 
-preencha a string `.env` com suas credenciais de desenvolvedor do Twitter (veja as instruções abaixo)
+preencha a string `.env` com suas credenciais de desenvolvedor do Twitter (veja as instruções [abaixo](#62-defina-suas-variáveis-​​no-arquivo-de-ambiente))
 
 ### 5. Mantendo as dependências do projeto atualizadas usando `poetry`
 
 #### 5.1 Instalando dependências do projeto de `pyproject.toml`
 
-`poetry install`
+```sh
+poetry install
+```
 
 #### 5.2 Defina o poetry para trabalhar com seu `.venv/` local
 
-`poetry config virtualenvs.create false --local`
+```sh
+poetry config virtualenvs.create false --local
+```
 
 #### 5.3 Verifique suas configurações do poetry:
 
-`poetry config --list`
+```sh
+poetry config --list
+```
 
 O resultado deve ser algo como abaixo:
 ```console
@@ -100,31 +121,46 @@ virtualenvs.path = "{cache-dir}/virtualenvs"  # /Users/dc/Library/Caches/pypoetr
 
 #### 6.1 Crie um arquivo .db em `API/app/`
 
-`$ cd API/app`
-</br>
-`$ touch mydatabase.db` Você pode criar manualmente
+```sh
+cd app
+touch mydatabase.db # Você pode criar manualmente
+```
 
-#### 6.2. Defina suas variáveis ​​no arquivo `.env`.
-####Se você planeja usar outro sistema de banco de dados, visite Flask [https://flask-sqlalchemy.palletsprojects.com/en/2.x/config/]
+#### 6.2 Defina suas variáveis ​​no arquivo de ambiente.
 
-````
-twitter_api_key=""
-twitter_api_secret=""
-twitter_access_token=""
-twitter_access_token_secret=""
-DATABASE_URL=sqlite:////mydatabase.db'
+> Se você planeja usar outro sistema de banco de dados, visite [Flask](https://flask-sqlalchemy.palletsprojects.com/en/2.x/config/)
+
+Na pasta do projeto edite o arquivo `.env`
+
+````sh
+twitter_api_key= "<INPUT YOUR KEY HERE>"
+twitter_api_secret= "<INPUT YOUR CONSUMER SECRET HERE>"
+twitter_access_token= "<INPUT YOUR ACCESS TOKEN KEY HERE>"
+twitter_access_token_secret= "<INPUT YOUR ACCESS TOKEN SECRET HERE>"
+DATABASE_URL="sqlite:///mydatabase.db"
 ````
 
 #### 6.3 Criando tabelas de banco de dados usando sqlalchemy
 
-`flask db upgrade` para gerar arquivos de migração # se eles não existirem
-</br>
-`flask db migrate` para criar as próprias tabelas
+Para gerar arquivos de migração, se eles não existirem
+
+```sh
+flask db upgrade
+```
+Para criar as próprias tabelas
+```sh
+flask db migrate
+```
 
 #### 6.4 verificando se as tabelas foram criadas
-`sqlite3 mydatabase.db`
+```sh
+sqlite3 app/mydatabase.db
+```
 #### 6.5 Uma vez no console sqlite3 digite o seguinte comando para verificar o esquema criado
-`$ .schema`
+
+```sh
+.schema
+```
 
 Você deve ver algo assim:
 
