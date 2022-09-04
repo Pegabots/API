@@ -2,6 +2,7 @@ from app import app
 from flask import jsonify, request
 from app.models.models import Analises, AnaliseSchema
 from app.services.botometer_service import BotometerService
+from concurrent.futures import ThreadPoolExecutor
 
 @app.get("/catch")
 def catch():
@@ -40,5 +41,21 @@ def multicatches():
         botometer_service = BotometerService()
         response = botometer_service.catch(user)
         results.append(response)
+
+    return jsonify(results), 200
+
+@app.get('/multicatchesparallel')
+def multicatches2():
+    handle = str(request.args.get('profiles'))
+    users = handle.split(',')
+    results = list()
+
+    def getResult(username):
+        botometer_service = BotometerService()
+        response = botometer_service.catch(username)
+        results.append(response)
+
+    with ThreadPoolExecutor(max_workers=10) as pool:
+        pool.map(getResult, users)
 
     return jsonify(results), 200
