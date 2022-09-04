@@ -9,6 +9,7 @@ from app.models import db
 from app.services.twitter_handler import TwitterHandler
 from app.services.botometer_service import BotometerService
 from app.models.models import BotProbability, Analises, AnaliseSchema
+from app.routes.lab.forms import AnaliseForm
 
 router = Blueprint(
     "lab",
@@ -17,7 +18,7 @@ router = Blueprint(
     template_folder="templates"
 )
 
-@router.route("/home", methods=["GET"])
+@router.route("/home", methods=["GET", "POST"])
 @login_required
 def home():
     def _getUser(user_data):        
@@ -41,16 +42,16 @@ def home():
 
         return(user)
 
+    form = AnaliseForm()
     analises = None
-    target = request.args.get("target")
 
-    if target:
+    if form.validate_on_submit():
         handler = TwitterHandler()
         botometer = BotometerService()
         pegabot = BotProbability()
 
         data = handler.searchTweets(
-            q=target, 
+            q=form.handle.data, 
             num_tweets=20,
         )
         analises = []
@@ -113,8 +114,10 @@ def home():
                 analises.append(
                     analise_schema.dump(analise)
                 )
+    
     return render_template(
         "home.html",
         current_user=current_user,
+        form=form,
         analises=analises
     )
