@@ -1,40 +1,34 @@
 {% extends "base.html" %}
 
+{% block title %}Lab{% endblock %}
+
 {% block content %}
 
-{{ current_user.name }}
+    <h3>Analisar termo</h3>
+    <form method="POST" action="/lab/home">
+        {{ form.csrf_token }}
 
-{% if analises %}
+        <fieldset>
+            {{ form.handle.label }}
+            {{ form.handle }}
+            {% if form.handle.errors %}
+            <ul class="errors">
+                {% for error in form.handle.errors %}
+                <li>{{ error }}</li>{% endfor %}
+            </ul>
+            {% endif %}
+        </fieldset>
+
+        <div class="submit-button">
+            {{ form.submit }}
+        </div>
+    </form>
+
+    <h3>Últimas análises</h3>
     <ul>
-    {% for analise in analises %}
-        <li>{{ analise.twitter_handle }} - {{ analise.total }}</li>
-    {% endfor %}
+        {% for item in user_analises_groups %}
+        <li><a href="/lab/analises/{{ item.id }}">{{ item.term }}</a></li>
+        {% endfor %}
     </ul>
-{% else %}
-<form method="POST" action="/lab/home">
-    {{ form.csrf_token }}
-
-    <fieldset>
-        {{ form.handle.label }}
-        {{ form.handle }}
-        {% if form.handle.errors %}
-          <ul class="errors">
-            {% for error in form.handle.errors %}
-              <li>{{ error }}</li>{% endfor %}
-          </ul>
-        {% endif %}
-    </fieldset>
-
-    <div class="submit-button">
-        {{ form.submit }}
-    </div>
-</form>
-{% endif %}
-
-<ul>
-    {% for item in user_analises_groups %}
-    <li>{{ item.term }}</li>
-    {% endfor %}
-</ul>
 
 {% endblock content %}

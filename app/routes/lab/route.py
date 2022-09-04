@@ -124,7 +124,9 @@ def home():
                 analises.append(
                     analise_schema.dump(analise)
                 )
-    
+
+        return redirect("/lab/analises/%s" % analises_group.id)
+
     user_analises_groups = AnalisesGroup.query.filter_by(
         user=current_user.id
     )
@@ -134,5 +136,31 @@ def home():
         current_user=current_user,
         form=form,
         analises=analises,
+        user_analises_groups=user_analises_groups
+    )
+
+@router.route("/analises/<group_id>", methods=["GET"])
+@login_required
+def view_analises(group_id):
+    try:
+        group = AnalisesGroup.query.filter_by(
+            id=group_id
+        ).first()
+        analises = Analises.query.filter_by(
+            group=group_id
+        )
+    except:
+        flash("Pesquisa não encontrada")
+        return redirect(url_for("lab.home"))
+    
+    user_analises_groups = AnalisesGroup.query.filter_by(
+        user=current_user.id
+    )
+
+    return render_template(
+        "analises.html",
+        current_user=current_user,
+        analises=analises,
+        term=group.term,
         user_analises_groups=user_analises_groups
     )
