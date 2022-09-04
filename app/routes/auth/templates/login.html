@@ -29,7 +29,7 @@
       <fieldset class="password">
         {{ form.password.label }}
         {{ form.password }}
-        {% if form.email.errors %}
+        {% if form.password.errors %}
           <ul class="errors">
             {% for error in form.password.errors %}
               <li>{{ error }}</li>{% endfor %}
