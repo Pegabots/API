@@ -55,10 +55,23 @@ class TwitterHandler():
             print("Tweepy Error retrieving user: {}".format(e))
             return {'api_errors': e.api_errors, 'codes': e.api_codes, 'reason': e.response.reason, 'args': e.args}
 
+    def searchTweets(self, q, num_tweets=10, result_type="recent"):
+        tweets = self.api.search_tweets(
+            q=q,
+            count=num_tweets,
+            result_type="recent"
+        )
 
-    def getUserTimeline(self, uid, num_tweets=100):
+        return tweets
+
+    def getUserTimeline(self, uid, num_tweets=100, exclude_replies=True):
         try:
-            timeline = self.api.user_timeline(user_id = uid, count = num_tweets)
+            timeline = self.api.user_timeline(
+                user_id = uid, 
+                count = num_tweets,
+                exclude_replies = exclude_replies
+            )
+
             tweets = []
             for tweet in timeline:
                 x = {

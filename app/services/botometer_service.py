@@ -19,7 +19,6 @@ class BotometerService():
             '''
             user = self.findUserAnalisisByHandle(handle=handle)
             response = self.twitter_handler.findByHandle(handle=handle) # check on twitter
-            print(response)
             if 'id' in user:
                 if 'api_errors' not in response: return user
                 return response
@@ -55,10 +54,6 @@ class BotometerService():
                         twitter_profile_image = response.twitter_profile_image,
                         # twitter_withheld_in_countries = response.twitter_withheld_in_countries, # giving error, needs a refactor
                         total = probability.total,
-                        friends = 0,#probability.friends,
-                        temporal = 0,#probability.temporal,
-                        network = 0,#probability.network,
-                        sentiment = 0,#probability.sentiment,
                         cache_times_served = 0, #
                         cache_validity = datetime.today() + timedelta(30),
                         pegabot_version = probability.pegabot_version,

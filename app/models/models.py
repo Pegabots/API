@@ -13,10 +13,6 @@ class Analises(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     handle = db.Column(db.String(80), nullable=False)
     total = db.Column(db.String(120), nullable=True)
-    friends = db.Column(db.String(120), nullable=True)
-    network = db.Column(db.String(120), nullable=True)
-    sentiment = db.Column(db.String(120), nullable=True)
-    temporal = db.Column(db.String(120), nullable=True)
     twitter_id = db.Column(db.String(120), nullable=True)
     twitter_handle = db.Column(db.String(120), nullable=True)
     twitter_user_name = db.Column(db.String(120), nullable=True)
@@ -40,7 +36,10 @@ class Analises(db.Model):
 
     def process_bind_param(value):
         if type(value) is str:
-            return datetime.strptime(value, '%Y-%m-%dT %H:%M:%S')
+            try:
+                return datetime.strptime(value, '%Y-%m-%dT %H:%M:%S')
+            except:
+                return datetime.strptime(value, "%a %b %d %H:%M:%S %z %Y")
         return value
 
     def __repr__(self):
