@@ -18,6 +18,11 @@ class User(UserMixin, db.Model):
     created_on = db.Column(db.DateTime, index=False, unique=False, nullable=True)
     last_login = db.Column(db.DateTime, index=False, unique=False, nullable=True)
 
+    twitter_api_key = db.Column(db.String(300), nullable=False, unique=False)
+    twitter_api_secret = db.Column(db.String(300), nullable=False, unique=False)
+    twitter_access_token = db.Column(db.String(300), nullable=False, unique=False)
+    twitter_access_token_secret = db.Column(db.String(300), nullable=False, unique=False)
+
     def set_password(self, password):
         """Create hashed password."""
         self.password = generate_password_hash(password, method="sha256")

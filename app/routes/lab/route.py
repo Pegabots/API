@@ -53,7 +53,9 @@ def home():
         db.session.add(analises_group)
         db.session.commit()
 
-        handler = TwitterHandler()
+        handler = TwitterHandler(
+            user=current_user
+        )
         botometer = BotometerService()
         pegabot = BotProbability()
 

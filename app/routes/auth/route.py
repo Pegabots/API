@@ -48,7 +48,10 @@ def login():
 def load_user(user_id):
     """Check if user is logged-in upon page load."""
     if user_id is not None:
-        return User.query.get(user_id)
+        try:
+            return User.query.get(user_id)
+        except:
+            return None
     return None
 
 @router.route("/signup", methods=["GET", "POST"])
@@ -64,7 +67,12 @@ def signup():
         existing_user = User.query.filter_by(email=form.email.data).first()
         if existing_user is None:
             user = User(
-                name=form.name.data, email=form.email.data
+                name=form.name.data, 
+                email=form.email.data,
+                twitter_api_key=form.twitter_api_key.data,
+                twitter_api_secret=form.twitter_api_secret.data,
+                twitter_access_token=form.twitter_access_token.data,
+                twitter_access_token_secret=form.twitter_access_token_secret.data
             )
             user.set_password(form.password.data)
             db.session.add(user)

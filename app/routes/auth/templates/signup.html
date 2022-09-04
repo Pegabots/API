@@ -59,6 +59,47 @@
         {% endif %}
       </fieldset>
 
+      <fieldset class="twitter_api_key">
+        {{ form.twitter_api_key.label }}
+        {{ form.twitter_api_key }}
+        {% if form.twitter_api_key.errors %}
+          <ul class="errors">
+            {% for error in form.twitter_api_key.errors %}
+              <li>{{ error }}</li>{% endfor %}
+          </ul>
+        {% endif %}
+      </fieldset>
+      <fieldset class="twitter_api_secret">
+        {{ form.twitter_api_secret.label }}
+        {{ form.twitter_api_secret }}
+        {% if form.twitter_api_secret.errors %}
+          <ul class="errors">
+            {% for error in form.twitter_api_secret.errors %}
+              <li>{{ error }}</li>{% endfor %}
+          </ul>
+        {% endif %}
+      </fieldset>
+      <fieldset class="twitter_access_token">
+        {{ form.twitter_access_token.label }}
+        {{ form.twitter_access_token }}
+        {% if form.twitter_access_token.errors %}
+          <ul class="errors">
+            {% for error in form.twitter_access_token.errors %}
+              <li>{{ error }}</li>{% endfor %}
+          </ul>
+        {% endif %}
+      </fieldset>
+      <fieldset class="twitter_access_token_secret">
+        {{ form.twitter_access_token_secret.label }}
+        {{ form.twitter_access_token_secret }}
+        {% if form.twitter_access_token_secret.errors %}
+          <ul class="errors">
+            {% for error in form.twitter_access_token_secret.errors %}
+              <li>{{ error }}</li>{% endfor %}
+          </ul>
+        {% endif %}
+      </fieldset>
+
       <div class="submit-button">
         {{ form.submit }}
       </div>
