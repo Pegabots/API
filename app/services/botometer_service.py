@@ -105,7 +105,10 @@ class BotometerService():
                 db.session.add(analise)
                 db.session.commit()
 
-    def botProbability(self, handle, user, timeline):
+    def botProbability(self, handle):
         p = BotProbability()
+        user = self.findUserAnalisisByHandle(handle=handle)
+        response = self.twitter_handler.findByHandle(handle=handle)
+        timeline = self.twitter_handler.getUserTimeline(response.twitter_id)
         response = p.botProbability(handle=handle, twitterTimeline=timeline, twitterUserData=user)
         return response

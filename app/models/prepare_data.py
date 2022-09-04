@@ -26,6 +26,9 @@ class MLTools:
         df_users['É bot?'] = ''
 
         #Extrai as informações de retweet
+        if not('tweet_is_retweet' in df_timeline.columns and 'tweet_text' in df_timeline.columns):
+            raise Exception("Problems on tweets")
+        
         df_timeline['retweet_tratado'] = df_timeline['tweet_is_retweet'].apply(lambda x: "sim" if (x == 'True' or x == True) else "não")
         df_timeline['tweet_com_rt_tratado'] = df_timeline['tweet_text'].apply(lambda x: "sim" if x.find("RT @") != -1 else "não" )
 
@@ -91,7 +94,7 @@ class MLTools:
         df = df_result_merge
 
         #Monta o conjunto de treinamento
-        feature_cols = ['followers_count', 'friends_count', 'Tempo mediano', 'Tempo menor']
+        feature_cols = ['twitter_followers_count', 'twitter_friends_count', 'Tempo mediano', 'Tempo menor']
         x = df[feature_cols]
 
         qtd_hashtags = df['tweet_hashtags'].apply(lambda x: len(x.replace("[","").replace("]","").replace(", \'","$").split("$")))
@@ -105,7 +108,7 @@ class MLTools:
 
         #O tamanho do nome e do login
         tam_username = df['handle'].apply(lambda x: len(str(x)))
-        tam_nome = df['name'].apply(lambda x: len(str(x)))
+        tam_nome = df['twitter_user_name'].apply(lambda x: len(str(x)))
         x['Tamanho do username'] = np.array(list(tam_username))
         x['Tamanho do nome'] = np.array(list(tam_nome))
 

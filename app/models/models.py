@@ -110,16 +110,20 @@ class BotProbability():
         return predicted_proba
 
     def botProbability(self, handle, twitterTimeline, twitterUserData):
+        analise = 0
         try:
             df_timeline = pd.DataFrame.from_dict(twitterTimeline)
-            df_user_data = pd.DataFrame.from_dict(twitterUserData)
+            df_user_data = pd.DataFrame([twitterUserData])
             analise = self.predict(df_user_data, df_timeline)
             self.total = round(analise[0][1]*100, 2)
+
         except:
-            self.total = -1
+             raise Exception("Problem(s) probably in predict function")    
+
 
         return edict({
             'pegabot_version': 'version-1.0',
             'handle': handle,
-            'total': self.total
+            'total': self.total,
+            'analysis': analise.tolist()
         })
