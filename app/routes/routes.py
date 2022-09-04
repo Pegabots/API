@@ -3,7 +3,6 @@ from flask import jsonify, request
 from app.models.models import Analises, AnaliseSchema
 from app.services.botometer_service import BotometerService
 
-
 @app.get("/catch")
 def catch():
     handle = str(request.args.get('profile'))
@@ -31,3 +30,15 @@ def complete():
 def feedback():
     return jsonify("feedback")
 
+@app.get('/multicatches')
+def multicatches():
+    handle = str(request.args.get('profiles'))
+    users = handle.split(',')
+
+    results = list()
+    for user in users:
+        botometer_service = BotometerService()
+        response = botometer_service.catch(user)
+        results.append(response)
+
+    return jsonify(results), 200
