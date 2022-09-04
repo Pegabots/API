@@ -8,7 +8,7 @@ import json
 from app.models import db
 from app.services.twitter_handler import TwitterHandler
 from app.services.botometer_service import BotometerService
-from app.models.models import BotProbability, Analises, AnaliseSchema
+from app.models.models import BotProbability, Analises, AnaliseSchema, AnalisesGroup
 from app.routes.lab.forms import AnaliseForm
 
 router = Blueprint(
@@ -46,6 +46,13 @@ def home():
     analises = None
 
     if form.validate_on_submit():
+        analises_group = AnalisesGroup(
+            user=current_user.id,
+            term=form.handle.data
+        )
+        db.session.add(analises_group)
+        db.session.commit()
+
         handler = TwitterHandler()
         botometer = BotometerService()
         pegabot = BotProbability()
@@ -87,6 +94,7 @@ def home():
                     _getUser(user)
                 )
                 analise = Analises(
+                    group=analises_group.id,
                     # User
                     handle = user["screen_name"],
                     twitter_id = user["id"],
@@ -115,9 +123,14 @@ def home():
                     analise_schema.dump(analise)
                 )
     
+    user_analises_groups = AnalisesGroup.query.filter_by(
+        user=current_user.id
+    )
+    
     return render_template(
         "home.html",
         current_user=current_user,
         form=form,
-        analises=analises
+        analises=analises,
+        user_analises_groups=user_analises_groups
     )

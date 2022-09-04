@@ -8,9 +8,23 @@ from easydict import EasyDict as edict
 #Importa a classe de preparação de dados
 from app.models.prepare_data import MLTools
 
+class AnalisesGroup(db.Model):
+    __tablename__ = 'analises_group'
+    id = db.Column(db.Integer, primary_key=True)
+    user = db.Column(
+        db.Integer,
+        db.ForeignKey("users.id")
+    )
+    term = db.Column(db.String(80), nullable=False)
+
 class Analises(db.Model):
     __tablename__ = 'analises'
     id = db.Column(db.Integer, primary_key=True)
+    group = db.Column(
+        db.Integer,
+        db.ForeignKey("analises_group.id"),
+        nullable=True
+    )
     handle = db.Column(db.String(80), nullable=False)
     total = db.Column(db.String(120), nullable=True)
     twitter_id = db.Column(db.String(120), nullable=True)

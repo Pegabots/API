@@ -31,4 +31,10 @@
 </form>
 {% endif %}
 
+<ul>
+    {% for item in user_analises_groups %}
+    <li>{{ item.term }}</li>
+    {% endfor %}
+</ul>
+
 {% endblock content %}
