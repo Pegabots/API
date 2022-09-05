@@ -6,13 +6,21 @@ from datetime import datetime
 
 
 class TwitterHandler():
-    def __init__(self):
-        self.twitter = {
-            'TWITTER_API_KEY': s.os.environ.get("twitter_api_key"),
-            'TWITTER_API_SECRET': s.os.environ.get("twitter_api_secret"),
-            'TWITTER_API_TOKEN': s.os.environ.get("twitter_access_token"),
-            'TWITTER_API_TOKEN_SECRET': s.os.environ.get("twitter_access_token_secret")
-        }
+    def __init__(self, user=None):
+        if not user:
+            self.twitter = {
+                'TWITTER_API_KEY': s.os.environ.get("twitter_api_key"),
+                'TWITTER_API_SECRET': s.os.environ.get("twitter_api_secret"),
+                'TWITTER_API_TOKEN': s.os.environ.get("twitter_access_token"),
+                'TWITTER_API_TOKEN_SECRET': s.os.environ.get("twitter_access_token_secret")
+            }
+        else:
+            self.twitter = {
+                'TWITTER_API_KEY': user.twitter_api_key,
+                'TWITTER_API_SECRET': user.twitter_api_secret,
+                'TWITTER_API_TOKEN': user.twitter_access_token,
+                'TWITTER_API_TOKEN_SECRET': user.twitter_access_token_secret
+            }
 
         self.auth = tweepy.OAuthHandler(self.twitter.get('TWITTER_API_KEY'), self.twitter.get('TWITTER_API_SECRET'))
 
@@ -55,10 +63,23 @@ class TwitterHandler():
             print("Tweepy Error retrieving user: {}".format(e))
             return {'api_errors': e.api_errors, 'codes': e.api_codes, 'reason': e.response.reason, 'args': e.args}
 
+    def searchTweets(self, q, num_tweets=10, result_type="recent"):
+        tweets = self.api.search_tweets(
+            q=q,
+            count=num_tweets,
+            result_type="recent"
+        )
 
-    def getUserTimeline(self, uid, num_tweets=100):
+        return tweets
+
+    def getUserTimeline(self, uid, num_tweets=100, exclude_replies=True):
         try:
-            timeline = self.api.user_timeline(user_id = uid, count = num_tweets)
+            timeline = self.api.user_timeline(
+                user_id = uid, 
+                count = num_tweets,
+                exclude_replies = exclude_replies
+            )
+
             tweets = []
             for tweet in timeline:
                 x = {

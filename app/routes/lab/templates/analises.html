@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block title %}{{ term  }}{% endblock %}
+
+{% block content %}
+<h1>{{ term }}</h1>
+<ul>
+    {% for analise in analises %}
+        <li><a href="https://twitter.com/{{ analise.twitter_handle }}" target="_blank">{{ analise.twitter_handle }}</a> - {{ analise.total }}</li>
+    {% endfor %}
+</ul>
+
+<h3>Últimas análises</h3>
+<ul>
+    {% for item in user_analises_groups %}
+    <li><a href="/lab/analises/{{ item.id }}">{{ item.term }}</a></li>
+    {% endfor %}
+</ul>
+
+{% endblock content %}

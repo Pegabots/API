@@ -32,6 +32,7 @@ SQLAlchemy = "1.4.25"
 tweepy = "4.1.0"
 urllib3 = "1.26.7"
 Werkzeug = "2.0.2"
+sklearn = "0.0"
 
 [tool.poetry.dev-dependencies]
 

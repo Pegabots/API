@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <div class="form-wrapper">
+
+    {% for message in get_flashed_messages() %}
+      <div class="alert alert-warning">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        {{ message }}
+      </div>
+    {% endfor %}
+
+    <h1>Sign Up</h1>
+
+    <form method="POST" action="/auth/signup">
+      {{ form.csrf_token }}
+
+      <fieldset class="name">
+        {{ form.name.label }}
+        {{ form.name(placeholder='John Smith') }}
+        {% if form.name.errors %}
+          <ul class="errors">
+            {% for error in form.email.errors %}
+              <li>{{ error }}</li>{% endfor %}
+          </ul>
+        {% endif %}
+      </fieldset>
+
+      <fieldset class="email">
+        {{ form.email.label }}
+        {{ form.email(placeholder='youremail@example.com') }}
+        {% if form.email.errors %}
+          <ul class="errors">
+            {% for error in form.email.errors %}
+              <li>{{ error }}</li>{% endfor %}
+          </ul>
+        {% endif %}
+      </fieldset>
+
+      <fieldset class="password">
+        {{ form.password.label }}
+        {{ form.password }}
+        {% if form.password.errors %}
+          <ul class="errors">
+            {% for error in form.password.errors %}
+              <li>{{ error }}</li>{% endfor %}
+          </ul>
+        {% endif %}
+      </fieldset>
+
+      <fieldset class="confirm">
+        {{ form.confirm.label }}
+        {{ form.confirm }}
+        {% if form.confirm.errors %}
+          <ul class="errors">
+            {% for error in form.confirm.errors %}
+              <li>{{ error }}</li>{% endfor %}
+          </ul>
+        {% endif %}
+      </fieldset>
+
+      <fieldset class="twitter_api_key">
+        {{ form.twitter_api_key.label }}
+        {{ form.twitter_api_key }}
+        {% if form.twitter_api_key.errors %}
+          <ul class="errors">
+            {% for error in form.twitter_api_key.errors %}
+              <li>{{ error }}</li>{% endfor %}
+          </ul>
+        {% endif %}
+      </fieldset>
+      <fieldset class="twitter_api_secret">
+        {{ form.twitter_api_secret.label }}
+        {{ form.twitter_api_secret }}
+        {% if form.twitter_api_secret.errors %}
+          <ul class="errors">
+            {% for error in form.twitter_api_secret.errors %}
+              <li>{{ error }}</li>{% endfor %}
+          </ul>
+        {% endif %}
+      </fieldset>
+      <fieldset class="twitter_access_token">
+        {{ form.twitter_access_token.label }}
+        {{ form.twitter_access_token }}
+        {% if form.twitter_access_token.errors %}
+          <ul class="errors">
+            {% for error in form.twitter_access_token.errors %}
+              <li>{{ error }}</li>{% endfor %}
+          </ul>
+        {% endif %}
+      </fieldset>
+      <fieldset class="twitter_access_token_secret">
+        {{ form.twitter_access_token_secret.label }}
+        {{ form.twitter_access_token_secret }}
+        {% if form.twitter_access_token_secret.errors %}
+          <ul class="errors">
+            {% for error in form.twitter_access_token_secret.errors %}
+              <li>{{ error }}</li>{% endfor %}
+          </ul>
+        {% endif %}
+      </fieldset>
+
+      <div class="submit-button">
+        {{ form.submit }}
+      </div>
+
+    </form>
+
+    <div class="login-signup">
+      <span>Already have an account? <a href="{{ url_for('auth.login') }}">Log in.</a></span>
+    </div>
+  </div>
+{% endblock %}

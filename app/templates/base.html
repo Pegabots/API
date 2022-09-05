@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+    <head>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <title>{% block title %}{% endblock %} | Pegabot</title>
+        <meta name="description" content="Add user authentication to your Flask app."/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+
+        </head>
+
+    <body>
+        <a href="/lab/home">{{ current_user.name }}</a>
+        <div class="container">
+        {% block content %}{% endblock %}
+        </div>
+
+    </body>
+
+</html>
