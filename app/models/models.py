@@ -6,7 +6,7 @@ from datetime import datetime
 from easydict import EasyDict as edict
 
 #Importa a classe de preparação de dados
-from app.models.prepare_data import MLTools
+from app.models.prepare_data import PegaBotTools
 
 class Analises(db.Model):
     __tablename__ = 'analises'
@@ -92,14 +92,14 @@ class BotProbability():
         self.temporal = 0
         self.sentiment = 0
 
-    def predict(self, users_data, timeline_data, path_input_model="app/models/pegabot-model-01.model"):
+    def predict(self, users_data, timeline_data, path_input_model="app/models/pegabot-model-02.pbm"):
         
         #Carrega o modelo do disco
         loaded_model = pickle.load(open(path_input_model, 'rb'))
 
         #Prepara os dados do usuário para a aplicação do modelo
-        tools = MLTools()
-        x_data = tools.prepare_data(users_data, timeline_data)
+        tools = PegaBotTools()
+        x_data = tools.prepare_data(users_data, timeline_data, apply = True)
 
         #Aplica o modelo para predição e retorna a predição {[0] Não é Bot, [1] é Bot}
         #predicted = loaded_model.predict(x_data)
@@ -119,7 +119,7 @@ class BotProbability():
             self.total = -1
 
         return edict({
-            'pegabot_version': 'version-1.0',
+            'pegabot_version': 'version-2.0',
             'handle': handle,
             'total': self.total
         })

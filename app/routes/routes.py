@@ -27,6 +27,10 @@ def complete():
     analise_schema = AnaliseSchema()
     return jsonify(analise_schema.dump(result))
 
+@app.route('/')
+def test():
+    return("Funciona!")
+
 @app.post('/feedback')
 def feedback():
     return jsonify("feedback")
