@@ -133,10 +133,8 @@ touch mydatabase.db # Você pode criar manualmente
 Na pasta do projeto edite o arquivo `.env`
 
 ````sh
-twitter_api_key= "<INPUT YOUR KEY HERE>"
-twitter_api_secret= "<INPUT YOUR CONSUMER SECRET HERE>"
-twitter_access_token= "<INPUT YOUR ACCESS TOKEN KEY HERE>"
-twitter_access_token_secret= "<INPUT YOUR ACCESS TOKEN SECRET HERE>"
+X-RapidAPI-Key="ADD Your Key"
+Scrapfly-Key="ADD Your Key"
 DATABASE_URL="sqlite:///mydatabase.db"
 ````
 

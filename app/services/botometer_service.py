@@ -18,49 +18,49 @@ class BotometerService():
             3. return the new analisis to client
             '''
             previous_user = 0
-            #previous_user = self.findUserAnalisisByHandle(handle=handle)
+            previous_user = self.findUserAnalisisByHandle(handle=handle)
             user = self.twitter_handler.getUser(handle=handle) # check on twitter
-            print(user)
-            #if 'id' in previous_user:
-            #    if user==False: return previous_user
-            #    return user
-            #else: # should perform the analisis
+
+            if 'id' in previous_user:
+                if user==False: return previous_user
+                return user
+            else: # should perform the analisis
                 
-            if user != False: # if finds the user on twitter performs the analisis and saves to the database
-                timeline = self.twitter_handler.getUserTimeline(handle)
-                print(timeline)
-                if timeline == False:
-                    return False
-                probability = self.pegabot.botProbability(handle, timeline, user)  # bot probability
-                print(probability)
-                # save analisis to database
-                """"
-                analise = Analises(
-                    # User
-                    twitter_created_at = Analises.process_bind_param(value=user.created_at),
-                    twitter_user_description = user.description,
-                    twitter_followers_count = user.followers_count,
-                    twitter_friends_count = user.friends_count,
-                    twitter_statuses_count = user.statuses_count,
-                    twitter_favourites_count = user.favourites_count,
-                    twitter_handle = user.handle,
-                    twitter_user_name = user.name,
-                    twitter_is_verified = user.verified,
-                    #twitter_id = user.twitter_id, #Falta ADD
-                    total = probability.total,
-                    cache_times_served = 0, #
-                    cache_validity = datetime.today() + timedelta(30),
-                    pegabot_version = probability.pegabot_version,
-                )
-                db.session.add(analise)
-                db.session.commit()
-                #analise_schema = AnaliseSchema()
-                """
-                return probability
+                if user != False: # if finds the user on twitter performs the analisis and saves to the database
+                    timeline = self.twitter_handler.getUserTimeline(handle)
+                   
+                    if timeline == False:
+                        return False
+                    probability = self.pegabot.botProbability(handle, timeline, user)  # bot probability
+                    print(probability)
+                    user = user[0]
+                    # save analisis to database
+                    analise = Analises(
+                        # User
+                        twitter_id = user["id"],
+                        handle = user["handle"],
+                        twitter_handle = user["handle"],
+                        twitter_user_name = user["name"],
+                        twitter_user_description = user["description"],
+                        twitter_created_at = Analises.process_bind_param(value=user["created_at"]),
+                        twitter_followers_count = user["followers_count"],
+                        twitter_friends_count = user["friends_count"],
+                        twitter_statuses_count = user["statuses_count"],
+                        twitter_favourites_count = user["favourites_count"],
+                        twitter_is_verified = user["verified"],
+                        total = probability.total,
+                        cache_times_served = 0, #
+                        cache_validity = datetime.today() + timedelta(30),
+                        pegabot_version = probability.pegabot_version,
+                    )
+                    db.session.add(analise)
+                    db.session.commit()
+                    analise_schema = AnaliseSchema()
+                    return analise_schema.dump(analise)
+                else:
+                    return user
         except Exception as e:
             raise
-        else:
-            return user
 
 
     def findUserAnalisisByHandle(self, handle):

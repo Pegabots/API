@@ -1,26 +1,25 @@
 
-from typing import Dict
-from loguru import logger as log
 from scrapfly import ScrapeConfig, ScrapflyClient
+from loguru import logger as log
+from dotenv import load_dotenv
 from datetime import datetime
+from typing import Dict
 
-import calendar
 import http.client
+import threading
+import calendar
 import asyncio
 import json
 import re
+import os
 
 class TwitterHandler():
     def __init__(self):
-        self.SCRAPFLY = ScrapflyClient(key="scp-live-608f1f81a859476da561076fa6147b8c")
+        load_dotenv()
+        self.SCRAPFLY = ScrapflyClient(key=os.getenv("Scrapfly-Key"))
         self.BASE_CONFIG = {
-            # Twitter.com requires Anti Scraping Protection bypass feature.
-            # for more: https://scrapfly.io/docs/scrape-api/anti-scraping-protection
             "asp": True,
-            # Twitter.com is javascript-powered web application so it requires
-            # headless browsers for scraping
             "render_js": True,
-            # "country": "CA",  # set prefered country here, for example Canada
         }
 
     def api(self):
@@ -75,7 +74,7 @@ class TwitterHandler():
         conn = http.client.HTTPSConnection("twitter-api45.p.rapidapi.com")
 
         headers = {
-            'X-RapidAPI-Key': "0aab88c81dmsh895e703bc15092fp1314b3jsn2e5c3520e9c2",
+            'X-RapidAPI-Key': os.getenv("X-RapidAPI-Key"),
             'X-RapidAPI-Host': "twitter-api45.p.rapidapi.com"
         }
 
@@ -108,7 +107,7 @@ class TwitterHandler():
     
     def retweeted(self, tweet):
         try:
-            if(t['timeline'][0]['retweeted']): return True
+            if(tweet['retweeted']): return True
         except:
             return False
 
@@ -121,65 +120,81 @@ class TwitterHandler():
         source = re.search(pattern_source, s).group(0)
         source = source[1:-1]
         return source
+    
+#    def get_source_thread(self, handle, tweet, source):
+#        source.append(self.get_source(handle, tweet))
 
     def getUserTimeline(self, handle, num_tweets=20):
-        #try:
-        timeline = json.loads(self.scrape_tweets(handle))
-        tweets = []
-        for tweet in timeline['timeline']:
+        try:
+            timeline = json.loads(self.scrape_tweets(handle))
 
-            #Atributo de Publicação
-            in_reply_to_status_id = self.reply_to(tweet)
+            #thread_list = []
+            #source = []
+            #for tweet in timeline['timeline']:
+            #    thread = threading.Thread(target=self.get_source_thread, args=(handle, tweet, source))
+            #    thread_list.append(thread)
+            #    if(len(thread_list)>=num_tweets): break
+            #for thread in thread_list:
+            #    thread.start()
+            #for thread in thread_list:
+            #    thread.join()
+            
+            tweets = []
+            source = self.get_source(handle, timeline['timeline'][0])
+            for tweet in timeline['timeline']:
 
-            created_at = tweet['created_at'].split()
-            month = list(calendar.month_abbr).index(created_at[1])
-            created_at = datetime.strptime(created_at[5]+'-'+str(month)+'-'+created_at[2]+' '+created_at[3]+created_at[4], '%Y-%m-%d %H:%M:%S%z')
+                #Atributo de Publicação
+                in_reply_to_status_id = self.reply_to(tweet)
 
-            quoted_status_text = ''
-            if(self.is_quote == True):
-                quoted_status_text = tweet['quoted']['text']
+                created_at = tweet['created_at'].split()
+                month = list(calendar.month_abbr).index(created_at[1])
+                created_at = datetime.strptime(created_at[5]+'-'+str(month)+'-'+created_at[2]+' '+created_at[3]+created_at[4], '%Y-%m-%d %H:%M:%S%z')
 
-            #Atributo de Publicação
-            retweet_count = tweet['retweets']
+                quoted_status_text = ''
+                if(self.is_quote == True):
+                    quoted_status_text = tweet['quoted']['text']
 
-            #Atributo de Publicação
-            text = tweet['text']
+                #Atributo de Publicação
+                retweet_count = tweet['retweets']
 
-            pattern_hashtags = r"#\w+"
-            pattern_users = r"@\w+"
+                #Atributo de Publicação
+                text = tweet['text']
 
-            #Atributo de Publicação
-            text_hashtags = re.findall(pattern_hashtags, text)
+                pattern_hashtags = r"#\w+"
+                pattern_users = r"@\w+"
 
-            #Atributo de Publicação
-            text_user_mentions = re.findall(pattern_users, text)
+                #Atributo de Publicação
+                text_hashtags = re.findall(pattern_hashtags, text)
 
-            #Atributo de Publicação
-            source = self.get_source(handle, tweet)
+                #Atributo de Publicação
+                text_user_mentions = re.findall(pattern_users, text)
 
-            x = {
-                "tweet_author_id": tweet['author']['rest_id'],
-                "tweet_author": tweet['author']['screen_name'],
-                "tweet_created_at": str(created_at),
-                "tweet_favorite_count": tweet['favorites'],
-                "tweet_hashtags": str(text_hashtags),
-                "tweet_retweet_count": retweet_count,
-                "tweet_is_retweet": self.e_retweet(tweet),
-                "tweet_is_quote": self.is_quote(tweet),
-                "tweet_source": source,
-                "tweet_retweeted": self.retweeted(tweet),
-                "in_reply_to_status_id": str(in_reply_to_status_id),
-                "quoted_status_text": quoted_status_text,
-                "text_user_mentions": text_user_mentions,
-                "tweet_text": text
-            }
-            tweets.append(x)
+                #Atributo de Publicação
+                #source = self.get_source(handle, tweet)
 
-            if(len(tweets)>=num_tweets):
-                return (tweets)
-        return (tweets)
-        #except:
-        #    return False
+                x = {
+                    "tweet_author_id": tweet['author']['rest_id'],
+                    "tweet_author": tweet['author']['screen_name'],
+                    "tweet_created_at": str(created_at),
+                    "tweet_favorite_count": tweet['favorites'],
+                    "tweet_hashtags": str(text_hashtags),
+                    "tweet_retweet_count": retweet_count,
+                    "tweet_is_retweet": self.e_retweet(tweet),
+                    "tweet_is_quote": self.is_quote(tweet),
+                    "tweet_source": source,
+                    "tweet_retweeted": self.retweeted(tweet),
+                    "in_reply_to_status_id": str(in_reply_to_status_id),
+                    "quoted_status_text": quoted_status_text,
+                    "text_user_mentions": text_user_mentions,
+                    "tweet_text": text
+                }
+                tweets.append(x)
+
+                if(len(tweets)>=num_tweets):
+                    return (tweets)
+            return (tweets)
+        except:
+            return False
 
     def getUser(self, handle):
         try:
